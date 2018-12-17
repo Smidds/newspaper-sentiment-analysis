@@ -1,0 +1,6 @@
+creds
+creds/*
+.vscode
+.vscode/*
+news_articles
+articles_list.txt
