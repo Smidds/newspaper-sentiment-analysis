@@ -11,6 +11,7 @@ requests = "*"
 google-cloud-language = "*"
 beautifulsoup = "*"
 bs4 = "*"
+colorama = "*"
 
 [requires]
 python_version = "2.7"

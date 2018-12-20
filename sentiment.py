@@ -7,6 +7,7 @@ from os import listdir
 from os import environ
 from os.path import isfile, join
 from web_scraper import Article, JSON_to_articles
+from colorama import Fore, Back, Style
 
 # Imports the Google Cloud client library
 from google.cloud import language
@@ -24,7 +25,9 @@ def analyze(articles_file):
    articles = JSON_to_articles(articles_json)
 
    for article in articles:
-      print '"{}"'.format(bcolors.HEADER + bcolors.UNDERLINE + article.title + bcolors.ENDC)
+      print '"{}"'.format(Fore.CYAN + Style.BRIGHT + article.title + Fore.RESET + Style.RESET_ALL)
+      print 'Author: {}\nDate: {}'.format(article.author, article.date)
+
       # The text to analyze
       document = types.Document(
          content=article.text,
@@ -36,30 +39,19 @@ def analyze(articles_file):
 
       sentiment_score_text = ""
       if sentiment.score > 0:
-         sentiment_score_text = '{}{}{}'.format(bcolors.OKGREEN, sentiment.score, bcolors.ENDC)
+         sentiment_score_text = '{}{}{}'.format(Fore.GREEN, sentiment.score, Fore.RESET)
       elif sentiment.score < 0:
-         sentiment_score_text = '{}{}{}'.format(bcolors.FAIL, sentiment.score, bcolors.ENDC)
+         sentiment_score_text = '{}{}{}'.format(Fore.RED, sentiment.score, Fore.RESET)
       else:
          sentiment_score_text = sentiment.score
 
       sentiment_magnitude_text = ""
       if sentiment.magnitude >= 5:
-         sentiment_magnitude_text = '{}{}{}'.format(bcolors.WARNING, sentiment.magnitude, bcolors.ENDC)
+         sentiment_magnitude_text = '{}{}{}'.format(Fore.YELLOW, sentiment.magnitude, Fore.RESET)
       else:
          sentiment_magnitude_text = sentiment.magnitude
 
-      print 'Author: {}\nDate: {}'.format(article.author, article.date)
-      print bcolors.OKBLUE + bcolors.BOLD + '  Overal Sentiment:' + bcolors.ENDC
-      print '     Score: {}, Magnitude: {}'.format(sentiment_score_text, sentiment_magnitude_text)
+      print Fore.BLUE + Style.BRIGHT + '  Overal Sentiment:' + Fore.RESET + Style.RESET_ALL
+      print ('     Score: ' + Style.BRIGHT + '{}' + Style.RESET_ALL + ', Magnitude: ' + Style.BRIGHT + '{}' + Style.RESET_ALL).format(sentiment_score_text, sentiment_magnitude_text)
       print ''
       print ''
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'

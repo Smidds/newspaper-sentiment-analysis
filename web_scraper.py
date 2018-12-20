@@ -19,6 +19,7 @@ def scrape_to_json(infile=None, outdir="", links=[], scraper=()):
     article_list = []
 
     for url in links:
+        print 'url is [{}]'.format(url)
         html = BeautifulSoup(simple_get(url), 'html.parser')
         if html == None:
             exit(2)
