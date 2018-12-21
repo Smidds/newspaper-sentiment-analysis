@@ -19,12 +19,11 @@ def scrape_to_json(infile=None, outdir="", links=[], scraper=()):
     article_list = []
 
     for url in links:
-        print 'url is [{}]'.format(url)
         html = BeautifulSoup(simple_get(url), 'html.parser')
         if html == None:
             exit(2)
 
-        story = scraper(html)
+        story = scraper(html, url)
 
         if story != None:
             story.__type__ = "Article"
@@ -39,7 +38,7 @@ def scrape_to_json(infile=None, outdir="", links=[], scraper=()):
 
 def article_object_parser(obj):
     if '__type__' in obj and obj['__type__'] == 'Article':
-        return Article(obj['title'], obj['date'], obj['author'], obj['text'])
+        return Article(obj['title'], obj['date'], obj['author'], obj['text'], obj['url'])
     return None
 
 def JSON_to_articles(article_json):
@@ -51,12 +50,14 @@ class Article:
     date = ""
     author = ""
     text = ""
+    url = ""
 
-    def __init__(self, title, date, author, text):
+    def __init__(self, title, date, author, text, url):
         self.title = title
         self.date = date
         self.author = author
         self.text = text
+        self.url = url
 
 def simple_get(url):
     """

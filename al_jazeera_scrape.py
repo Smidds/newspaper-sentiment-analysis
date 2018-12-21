@@ -14,7 +14,7 @@ def main():
     outfile = scrape_to_json(infile, outdir, links, scraper)
     analyze(outfile)
 
-def scraper(html):
+def scraper(html, url):
     author = ''
     text = ''
     title = ''
@@ -49,7 +49,7 @@ def scraper(html):
         for p in paragraphs:
             text += u''.join((p.get_text())).encode('utf-8')
 
-    return Article(title, date, author, text)
+    return Article(title, date, author, text, url)
 
 
 def arg_parse():

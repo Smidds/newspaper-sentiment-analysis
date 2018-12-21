@@ -23,9 +23,13 @@ def analyze(articles_file):
 
    articles_json = open(articles_file, 'r').read()
    articles = JSON_to_articles(articles_json)
+   total_score = 0
+   total_magnitude = 0
 
    for article in articles:
       print '"{}"'.format(Fore.CYAN + Style.BRIGHT + article.title + Fore.RESET + Style.RESET_ALL)
+      if (len(article.url) != 0):
+         print 'URL: {}'.format(article.url)
       print 'Author: {}\nDate: {}'.format(article.author, article.date)
 
       # The text to analyze
@@ -36,6 +40,9 @@ def analyze(articles_file):
       # Detects the sentiment of the text
       annotations = client.analyze_sentiment(document=document, encoding_type='UTF32')
       sentiment = annotations.document_sentiment
+
+      total_score += sentiment.score
+      total_magnitude += sentiment.magnitude
 
       sentiment_score_text = ""
       if sentiment.score > 0:
@@ -55,3 +62,24 @@ def analyze(articles_file):
       print ('     Score: ' + Style.BRIGHT + '{}' + Style.RESET_ALL + ', Magnitude: ' + Style.BRIGHT + '{}' + Style.RESET_ALL).format(sentiment_score_text, sentiment_magnitude_text)
       print ''
       print ''
+
+   avg_score = total_score / len(articles)
+   avg_magnitude = total_magnitude / len(articles)
+   avg_score_text = ''
+
+   if avg_score > 0:
+      avg_score_text = '{}{}{}'.format(Fore.GREEN, avg_score, Fore.RESET)
+   elif avg_score < 0:
+      avg_score_text = '{}{}{}'.format(Fore.RED, avg_score, Fore.RESET)
+   else:
+      avg_score_text = avg_score
+
+   avg_magnitude_text = ""
+   if avg_magnitude >= 5:
+      avg_magnitude_text = '{}{}{}'.format(Fore.YELLOW, avg_magnitude, Fore.RESET)
+   else:
+      avg_magnitude_text = avg_magnitude
+
+   print '=========== [ Total Results ] ==========='
+   print 'Average Score: {}'.format(avg_score_text)
+   print 'Average Magnitude: {}'.format(avg_magnitude_text)
