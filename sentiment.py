@@ -63,8 +63,13 @@ def analyze(articles_file):
       print ''
       print ''
 
-   avg_score = total_score / len(articles)
-   avg_magnitude = total_magnitude / len(articles)
+   if (len(articles) > 0):
+      avg_score = total_score / len(articles)
+      avg_magnitude = total_magnitude / len(articles)
+   else:
+      avg_score = 0
+      avg_magnitude = 0
+
    avg_score_text = ''
 
    if avg_score > 0:
